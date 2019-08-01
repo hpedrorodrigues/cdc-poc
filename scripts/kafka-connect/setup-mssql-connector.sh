@@ -23,4 +23,4 @@ curl \
       }' \
   "${kafka_connect_url}/connectors"
 
-sleep 30s
+sleep 60s
