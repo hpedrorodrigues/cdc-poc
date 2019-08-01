@@ -8,5 +8,7 @@ sqlserver::run_query "
 BEGIN TRANSACTION;
 INSERT INTO demo (id, message) VALUES (1, 'Initial row');
 INSERT INTO demo (id, message) VALUES (2, 'Second row');
+INSERT INTO demo (id, message) VALUES (3, 'Third row');
+INSERT INTO demo (id, message) VALUES (4, 'The last one');
 COMMIT;
 "

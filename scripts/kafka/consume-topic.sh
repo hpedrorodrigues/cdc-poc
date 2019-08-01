@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 readonly current_dir="$(echo "${BASH_SOURCE[0]}" | xargs dirname)"
-readonly kafka_connect_topic='poc-mssql-demo'
+readonly debezium_connect_topic='sqlserver.dbo.demo'
 
 source "${current_dir}/configuration.sh"
 
@@ -15,5 +15,4 @@ function kafka::consume::topic() {
   --from-beginning
 }
 
-
-kafka::consume::topic "${kafka_connect_topic}"
+kafka::consume::topic "${debezium_connect_topic}"

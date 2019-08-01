@@ -13,6 +13,7 @@ services:
     environment:
       ACCEPT_EULA: 'Y'
       SA_PASSWORD: 'BBk_.6WA!k3e'
+      MSSQL_AGENT_ENABLED: 'true'
     networks:
       - cnet
 
@@ -47,44 +48,22 @@ services:
     networks:
       - cnet
 
-  kafka_connect:
-    image: confluentinc/cp-kafka-connect:5.3.0
-    container_name: kafka-connect
+  debezium-connect:
+    image: debezium/connect:0.10
+    container_name: debezium-connect
     depends_on:
       - kafka
       - sqlserver
     environment:
-      CONNECT_BOOTSTRAP_SERVERS: kafka:29092
-      CONNECT_REST_PORT: 8083
-      CONNECT_GROUP_ID: poc
-      CONNECT_CONFIG_STORAGE_TOPIC: poc-config
-      CONNECT_OFFSET_STORAGE_TOPIC: poc-offset
-      CONNECT_STATUS_STORAGE_TOPIC: poc-status
-      CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR: 1
-      CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR: 1
-      CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: 1
-      CONNECT_KEY_CONVERTER: org.apache.kafka.connect.json.JsonConverter
-      CONNECT_VALUE_CONVERTER: org.apache.kafka.connect.json.JsonConverter
-      CONNECT_INTERNAL_KEY_CONVERTER: org.apache.kafka.connect.json.JsonConverter
-      CONNECT_INTERNAL_VALUE_CONVERTER: org.apache.kafka.connect.json.JsonConverter
-      CONNECT_REST_ADVERTISED_HOST_NAME: kafka_connect
-      CONNECT_PLUGIN_PATH: /usr/share/java
+      BOOTSTRAP_SERVERS: kafka:29092
+      GROUP_ID: poc
+      CONFIG_STORAGE_TOPIC: poc-config
+      OFFSET_STORAGE_TOPIC: poc-offset
+      STATUS_STORAGE_TOPIC: poc-status
     ports:
       - 8083:8083
     networks:
       - cnet
-    command:
-      - /bin/bash
-      - -c
-      - |
-        # Download SQL Server
-        cd /usr/share/java/kafka-connect-jdbc
-        curl http://central.maven.org/maven2/com/microsoft/sqlserver/mssql-jdbc/7.0.0.jre8/mssql-jdbc-7.0.0.jre8.jar \
-          --output mssql-jdbc-7.0.0.jre8.jar
-
-        # Launch Kafka Connect
-        sleep infinity &
-        /etc/confluent/docker/run
 
 networks:
   cnet:
